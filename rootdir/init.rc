@@ -1076,13 +1076,21 @@ on post-fs-data
     # Update dm-verity state and set partition.*.verified properties.
     verity_update_state
 
+service statsd /apex/com.android.os.statsd/bin/statsd
+    override
+    class main
+    socket statsdw dgram+passcred 0222 statsd statsd
+    user statsd
+    group statsd log
+    task_profiles ServiceCapacityLow
+    disabled
+
 # It is recommended to put unnecessary data/ initialization from post-fs-data
 # to start-zygote in device's init.rc to unblock zygote start.
 on zygote-start
     wait_for_prop odsign.verification.done 1
     # A/B update verifier that marks a successful boot.
     exec_start update_verifier
-    start statsd
     start netd
     start zygote
     start zygote_secondary
