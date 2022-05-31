@@ -961,6 +961,20 @@ static void update_sched_lib_max_frequency() {
 
 static void setup_device_properties() {
     std::string error;
+
+    // Set hardware revision
+    std::string hw_revision = android::base::GetProperty("ro.boot.hwversion", "");
+    if (hw_revision.empty()) {
+        hw_revision = android::base::GetProperty("ro.revision", "");
+    }
+    PropertySetNoSocket("ro.boot.hardware.revision", hw_revision, &error);
+
+    std::string device_name = android::base::GetProperty("ro.product.marketname", "");
+    if (device_name.empty()) {
+        device_name = android::base::GetProperty("ro.product.device", "");
+    }
+    // Set product name to show when connect through usb
+    PropertySetNoSocket("vendor.usb.product_string", device_name, &error);
 }
 
 static void load_override_properties() {
