@@ -975,6 +975,8 @@ static void setup_device_properties() {
     }
     // Set product name to show when connect through usb
     PropertySetNoSocket("vendor.usb.product_string", device_name, &error);
+    // Set product name to show when connect through bluetooth
+    PropertySetNoSocket("bluetooth.device.default_name", device_name, &error);
 }
 
 static void load_override_properties() {
