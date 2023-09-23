@@ -878,6 +878,10 @@ static void workaround_snet_properties() {
         PropertySet(snet_prop_key[i], snet_prop_value[i], &error);
     }
 
+    if (stoi(android::base::GetProperty("ro.product.first_api_level", "")) > 32) {
+        PropertySet("ro.product.first_api_level", "32", &error);
+    }
+
     // Extra pops
     std::string build_flavor_key = "ro.build.flavor";
     std::string build_flavor_value = android::base::GetProperty(build_flavor_key, "");
