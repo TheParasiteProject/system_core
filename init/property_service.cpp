@@ -861,6 +861,16 @@ static void update_sys_usb_config() {
     }
 }
 
+static void update_blur_config() {
+    bool should_enable_blur = android::base::GetBoolProperty("ro.custom.blur.enable", true);
+    if (should_enable_blur) {
+        // Enable UI blur
+        InitPropertySet("ro.launcher.blur.appLaunch", "1");
+        InitPropertySet("ro.surface_flinger.supports_background_blur", "1");
+        InitPropertySet("ro.sf.blurs_are_expensive", "1");
+    }
+}
+
 static void load_override_properties() {
     if (ALLOW_LOCAL_PROP_OVERRIDE) {
         std::map<std::string, std::string> properties;
@@ -1346,6 +1356,9 @@ void PropertyLoadBootDefaults() {
     property_initialize_ro_vendor_api_level();
 
     update_sys_usb_config();
+
+    // Update blur setup
+    update_blur_config();
 
     // Workaround SafetyNet
     workaround_snet_properties();
