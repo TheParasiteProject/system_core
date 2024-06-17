@@ -869,7 +869,6 @@ static void update_blur_config() {
         // Enable UI blur
         InitPropertySet("ro.launcher.blur.appLaunch", "1");
         InitPropertySet("ro.surface_flinger.supports_background_blur", "1");
-        InitPropertySet("ro.sf.blurs_are_expensive", "1");
     }
 }
 
