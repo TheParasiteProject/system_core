@@ -31,6 +31,7 @@
 #include <sys/mman.h>
 #include <sys/poll.h>
 #include <sys/select.h>
+#include <sys/sysinfo.h>
 #include <sys/types.h>
 #include <sys/un.h>
 #include <unistd.h>
@@ -39,6 +40,7 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
+#include <cstdlib>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -871,6 +873,72 @@ static void update_blur_config() {
     }
 }
 
+static void update_dalvik_heap_config() {
+    // Set dalvik heap configuration
+    std::string heapstartsize, heapgrowthlimit, heapsize, heapminfree,
+            heapmaxfree, heaptargetutilization;
+
+    struct sysinfo sys;
+    sysinfo(&sys);
+
+    if (sys.totalram > 15ull * 1024 * 1024 * 1024) {
+        // from - phone-xhdpi-16384-dalvik-heap.mk
+        heapstartsize = "32m";
+        heapgrowthlimit = "448m";
+        heapsize = "640m";
+        heaptargetutilization = "0.4";
+        heapminfree = "16m";
+        heapmaxfree = "64m";
+    } else if (sys.totalram > 11ull * 1024 * 1024 * 1024) {
+        // from - phone-xhdpi-12288-dalvik-heap.mk
+        heapstartsize = "24m";
+        heapgrowthlimit = "384m";
+        heapsize = "512m";
+        heaptargetutilization = "0.42";
+        heapminfree = "8m";
+        heapmaxfree = "56m";
+    } else if (sys.totalram > 7ull * 1024 * 1024 * 1024) {
+        // from - phone-xhdpi-8192-dalvik-heap.mk
+        heapstartsize = "24m";
+        heapgrowthlimit = "256m";
+        heapsize = "512m";
+        heaptargetutilization = "0.46";
+        heapminfree = "8m";
+        heapmaxfree = "48m";
+    } else if (sys.totalram > 5ull * 1024 * 1024 * 1024) {
+        // from - phone-xhdpi-6144-dalvik-heap.mk
+        heapstartsize = "16m";
+        heapgrowthlimit = "256m";
+        heapsize = "512m";
+        heaptargetutilization = "0.5";
+        heapminfree = "8m";
+        heapmaxfree = "32m";
+    } else if (sys.totalram > 3ull * 1024 * 1024 * 1024) {
+        // from - phone-xhdpi-4096-dalvik-heap.mk
+        heapstartsize = "8m";
+        heapgrowthlimit = "192m";
+        heapsize = "512m";
+        heaptargetutilization = "0.6";
+        heapminfree = "8m";
+        heapmaxfree = "16m";
+    } else {
+        // from - phone-xhdpi-2048-dalvik-heap.mk
+        heapstartsize = "8m";
+        heapgrowthlimit = "192m";
+        heapsize = "512m";
+        heaptargetutilization = "0.75";
+        heapminfree = "512k";
+        heapmaxfree = "8m";
+    }
+
+    InitPropertySet("dalvik.vm.heapstartsize", heapstartsize.c_str());
+    InitPropertySet("dalvik.vm.heapgrowthlimit", heapgrowthlimit.c_str());
+    InitPropertySet("dalvik.vm.heapsize", heapsize.c_str());
+    InitPropertySet("dalvik.vm.heaptargetutilization", heaptargetutilization.c_str());
+    InitPropertySet("dalvik.vm.heapminfree", heapminfree.c_str());
+    InitPropertySet("dalvik.vm.heapmaxfree", heapmaxfree.c_str());
+}
+
 static void load_override_properties() {
     if (ALLOW_LOCAL_PROP_OVERRIDE) {
         std::map<std::string, std::string> properties;
@@ -1342,6 +1410,9 @@ void PropertyLoadBootDefaults() {
 
     // Update blur setup
     update_blur_config();
+
+    // Update dalvik heap setup
+    update_dalvik_heap_config();
 
     // Workaround SafetyNet
     workaround_snet_properties();
