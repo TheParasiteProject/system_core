@@ -938,6 +938,26 @@ static void update_dalvik_heap_config() {
     InitPropertySet("dalvik.vm.heapmaxfree", heapmaxfree.c_str());
 }
 
+static void update_sched_lib_max_frequency() {
+    // Report max frequency to unity tasks
+    std::string lib_name, mask_force;
+    lib_name = "com.miHoYo.,com.activision.,UnityMain,libunity.so,libil2cpp.so,libmain.so";
+    mask_force = "255";
+
+    if (std::filesystem::exists("/proc/sys/kernel/sched_lib_name")) {
+        WriteStringToFile(lib_name, "/proc/sys/kernel/sched_lib_name");
+    }
+    if (std::filesystem::exists("/proc/sys/kernel/sched_lib_mask_force")) {
+        WriteStringToFile(mask_force, "/proc/sys/kernel/sched_lib_mask_force");
+    }
+    if (std::filesystem::exists("/proc/sys/walt/sched_lib_name")) {
+        WriteStringToFile(lib_name, "/proc/sys/walt/sched_lib_name");
+    }
+    if (std::filesystem::exists("/proc/sys/walt/sched_lib_mask_force")) {
+        WriteStringToFile(mask_force, "/proc/sys/walt/sched_lib_mask_force");
+    }
+}
+
 static void load_override_properties() {
     if (ALLOW_LOCAL_PROP_OVERRIDE) {
         std::map<std::string, std::string> properties;
@@ -1415,6 +1435,9 @@ void PropertyLoadBootDefaults() {
 
     // Workaround SafetyNet
     workaround_snet_properties();
+
+    // Update max frequency of sched lib
+    update_sched_lib_max_frequency();
 
     // Restore the normal property override security after init extension is executed
     weaken_prop_override_security = false;
