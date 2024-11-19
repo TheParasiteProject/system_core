@@ -876,6 +876,7 @@ static void update_dalvik_heap_config() {
     // Set dalvik heap configuration
     std::string heapstartsize, heapgrowthlimit, heapsize, heapminfree,
             heapmaxfree, heaptargetutilization;
+    std::string error;
 
     struct sysinfo sys;
     sysinfo(&sys);
@@ -930,12 +931,12 @@ static void update_dalvik_heap_config() {
         heapmaxfree = "8m";
     }
 
-    InitPropertySet("dalvik.vm.heapstartsize", heapstartsize.c_str());
-    InitPropertySet("dalvik.vm.heapgrowthlimit", heapgrowthlimit.c_str());
-    InitPropertySet("dalvik.vm.heapsize", heapsize.c_str());
-    InitPropertySet("dalvik.vm.heaptargetutilization", heaptargetutilization.c_str());
-    InitPropertySet("dalvik.vm.heapminfree", heapminfree.c_str());
-    InitPropertySet("dalvik.vm.heapmaxfree", heapmaxfree.c_str());
+    PropertySetNoSocket("dalvik.vm.heapstartsize", heapstartsize.c_str(), &error);
+    PropertySetNoSocket("dalvik.vm.heapgrowthlimit", heapgrowthlimit.c_str(), &error);
+    PropertySetNoSocket("dalvik.vm.heapsize", heapsize.c_str(), &error);
+    PropertySetNoSocket("dalvik.vm.heaptargetutilization", heaptargetutilization.c_str(), &error);
+    PropertySetNoSocket("dalvik.vm.heapminfree", heapminfree.c_str(), &error);
+    PropertySetNoSocket("dalvik.vm.heapmaxfree", heapmaxfree.c_str(), &error);
 }
 
 static void update_sched_lib_max_frequency() {
