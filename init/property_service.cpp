@@ -959,6 +959,10 @@ static void update_sched_lib_max_frequency() {
     }
 }
 
+static void setup_device_properties() {
+    std::string error;
+}
+
 static void load_override_properties() {
     if (ALLOW_LOCAL_PROP_OVERRIDE) {
         std::map<std::string, std::string> properties;
@@ -1456,6 +1460,9 @@ void PropertyLoadBootDefaults() {
 
     // Update max frequency of sched lib
     update_sched_lib_max_frequency();
+
+    // Setup device properties
+    setup_device_properties();
 
     // Restore the normal property override security after init extension is executed
     weaken_prop_override_security = false;
