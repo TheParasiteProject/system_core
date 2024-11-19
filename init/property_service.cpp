@@ -973,8 +973,11 @@ static void setup_device_properties() {
     if (device_name.empty()) {
         device_name = android::base::GetProperty("ro.product.device", "");
     }
-    // Set product name to show when connect through usb
-    PropertySetNoSocket("vendor.usb.product_string", device_name, &error);
+    // Set product name to show when connect through usb if device is qcom
+    if (android::base::GetProperty("ro.hardware", "") == "qcom"
+        || android::base::GetProperty("ro.boot.hardware", "") == "qcom") {
+        PropertySetNoSocket("vendor.usb.product_string", device_name, &error);
+    }
     // Set product name to show when connect through bluetooth
     PropertySetNoSocket("bluetooth.device.default_name", device_name, &error);
 }
