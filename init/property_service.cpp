@@ -1019,6 +1019,9 @@ static const char *snet_prop_key[] = {
     "ro.oem_unlock_supported",
     "ro.vendor.boot.warranty_bit",
     "ro.vendor.warranty_bit",
+    "ro.secureboot.lockstate",
+    "ro.boot.realme.lockstate",
+    "ro.boot.realmebootstate",
     "vendor.boot.vbmeta.device_state",
     "vendor.boot.verifiedbootstate",
     "oplusboot.verifiedbootstate",
@@ -1048,6 +1051,9 @@ static const char *snet_prop_value[] = {
     "0", // ro.oem_unlock_supported
     "0", // ro.vendor.boot.warranty_bit
     "0", // ro.vendor.warranty_bit
+    "locked", // ro.secureboot.lockstate
+    "1", // ro.boot.realme.lockstate
+    "green", // ro.boot.realmebootstate
     "locked", // vendor.boot.vbmeta.device_state
     "green", // vendor.boot.verifiedbootstate
     "green", // oplusboot.verifiedbootstate
