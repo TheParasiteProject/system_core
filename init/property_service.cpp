@@ -1007,6 +1007,7 @@ static const char *snet_prop_key[] = {
     "ro.secure",
     "ro.bootimage.build.type",
     "ro.build.type",
+    "ro.build.selinux",
     "ro.system.build.type",
     "ro.system_ext.build.type",
     "ro.vendor.build.type",
@@ -1039,6 +1040,7 @@ static const char *snet_prop_value[] = {
     "1", // ro.secure
     "user", // ro.bootimage.build.type
     "user", // ro.build.type
+    "1", // ro.build.selinux
     "user", // ro.system.build.type
     "user", // ro.system_ext.build.type
     "user", // ro.vendor.build.type
